@@ -1,4 +1,4 @@
-from core import table,types
+from core import tables, types
 from movegen.move_generator import MoveGenerator
 
 AGG = 3 # aggression move scoring

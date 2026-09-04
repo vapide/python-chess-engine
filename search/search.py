@@ -20,6 +20,10 @@ TIE_MARGIN = 30
 
 TT_MOVE, AGGRESSIVE_MOVE, GOOD_CAPTURE, QUIET = 1000000, 900000, 800000, 100000
 
+def is_noisy(move):
+    return bool((move >> 12) & (types.CAPTURE | types.EN_PASSANT) or (move >> 16) & 0xF)
+
+
 class Search:
     DEFAULT_MOVE_OVERHEAD_MS = 50
 
