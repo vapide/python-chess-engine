@@ -3,6 +3,7 @@
 import time
 
 from core import types
+from core import tables
 from core.move import to_uci
 from movegen.move_generator import MoveGenerator
 
@@ -77,25 +78,23 @@ class Search:
         self.start_time = 0.0
 
     # public
-    def find_best_move(self, pos, limits):
+    def find_best_move(self, pos, limits): # iterative deepening
         self.stop = False
         self.nodes = 0
         self.limits = limits
         self.start_time = time.perf_counter()
         self.pondering = bool(getattr(limits, "ponder", False))
         self.nnue.refresh_from_pos(pos)
-        self._set_time_limit(limits, pos.side_to_move)
-        best_move = None
-        max_depth = limits.depth or MAX_PLY - 1
+        self._set_time_limit(pos.side_to_move)
 
-        for depth in range(1, max_depth + 1):
-            scored = self._search_root(pos, depth)
-            if not scored:
-                break                       # stopped or no legal moves at all
-            best_move = self._pick_root_move(pos, scored)
-            self.last_score = max(score for score, _ in scored)
-            self._print_info(pos, depth)
-            if abs(self.last_score) > MATE_THRESHOLD or self._should_stop(limits):
+        best_move = None
+        for depth in range(1, (limits.depth or MAX_PLY - 1) + 1):
+            result = self._root(pos, depth)
+            if result is None:
+                break                   # stopped or no legal moves at all
+            self.last_score, best_move = result
+            self._report(pos, depth)
+            if self.stop or abs(self.last_score) > MATE_THRESHOLD or self._time_up(0.4):
                 break
 
         if best_move is None:

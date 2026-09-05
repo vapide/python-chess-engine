@@ -14,7 +14,7 @@ import core.types
 from core import types
 
 _DEFAULT_NNUE_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nets", "eval.nnue"
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nets", "bunnynator.nnue"
 )
 
 

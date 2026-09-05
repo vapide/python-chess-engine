@@ -1,14 +1,14 @@
 import threading
 
 from core.position import Position
-from evaluation.nnue import NNUE, find_nnue
+from evaluation.nnue import NNUE # , find_nnue # forgot findnnue was not implemented yet
 from search.search import Search
 from search.transposition import TranspositionTable
 from testing.perft import perft
 
 
 class Engine:
-    DEFAULT_NNUE_FILE = find_nnue()
+    DEFAULT_NNUE_FILE = "nets/bunnynator.nnue"
 
     def __init__(self):
         self.nnue = NNUE(self.DEFAULT_NNUE_FILE)

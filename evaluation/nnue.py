@@ -16,7 +16,7 @@ QB = 64
 QAB = QA * QB
 
 _DEFAULT_NNUE_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nets", "eval.nnue"
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "nets", "bunnynator.nnue"
 )
 
 class NNUE:
@@ -40,6 +40,9 @@ class NNUE:
 
         if model_path is None:
             model_path = _DEFAULT_NNUE_PATH
+        #else:
+        #    print('error model path is none')
+        #    print(model_path)
         if os.path.exists(model_path):
             self.load_binary_weights(model_path)
 
