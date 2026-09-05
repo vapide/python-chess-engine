@@ -1,6 +1,8 @@
 import threading
+import traceback
 
 from core.position import Position
+from movegen.move_generator import MoveGenerator
 from evaluation.nnue import NNUE # , find_nnue # forgot findnnue was not implemented yet
 from search.search import Search
 from search.transposition import TranspositionTable
@@ -29,9 +31,14 @@ class Engine:
 
     def think_async(self, limits, on_complete):
         def _run():
-            self.search.stop = False
-            best_move = self.search.find_best_move(self.board, limits)
-            on_complete(best_move, self.search.last_ponder_move)
+            try:
+                self.search.stop = False
+                best_move = self.search.find_best_move(self.board, limits)
+                on_complete(best_move, self.search.last_ponder_move)
+            except Exception: # dont leave them hanging </3
+                traceback.print_exc()
+                legal = MoveGenerator.generate_legal_moves(self.board)
+                on_complete(legal[0] if legal else None, None)
 
         self._search_thread = threading.Thread(target=_run, daemon=True)
         self._search_thread.start()

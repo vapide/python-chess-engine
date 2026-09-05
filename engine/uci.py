@@ -83,12 +83,15 @@ class UCI:
             board = Position.from_fen(" ".join(fen_parts), nnue_instance=self.engine.nnue)
         else:
             return
+        self.engine.nnue.reset_stack()
         for move_text in move_args:
             move = self._legal_move_from_uci(move_text, board)
             if move is None:
                 print(f"info string Failed to parse or process move: {move_text}", flush=True)
                 return
-                self.engine.board = board
+            board.make_move(move)
+
+        self.engine.board = board
         self.engine.nnue.reset_stack()
 
     def _handle_go(self, args):
@@ -223,7 +226,7 @@ class UCI:
         self._send_uci_options()
         self._write("uciok")
 
-    def _legal_move_from_uci(self, move_text):
+    def _legal_move_from_uci(self, move_text, board):
             try:
                 parsed = from_uci(move_text)
                 from_sq = parsed & 0x3F
@@ -231,7 +234,7 @@ class UCI:
                 promotion = (parsed >> 16) & 0xF
             except ValueError:
                 return None
-            for move in MoveGenerator.generate_legal_moves(self.engine.board):
+            for move in MoveGenerator.generate_legal_moves(board):
                 if (
                     (move & 0x3F) == from_sq
                     and ((move >> 6) & 0x3F) == to_sq

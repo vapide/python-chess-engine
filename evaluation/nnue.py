@@ -56,6 +56,8 @@ class NNUE:
         #print(self.ft_weights.shape)
 
     def push(self):
+        if self._stack_ptr >= len(self._stack_white):
+            self._grow_stack()
         self._stack_white[self._stack_ptr] = self.acc_white
         self._stack_black[self._stack_ptr] = self.acc_black
         self._stack_ptr += 1
@@ -65,6 +67,11 @@ class NNUE:
 
         self.acc_white[:] = self._stack_white[self._stack_ptr]
         self.acc_black[:] = self._stack_black[self._stack_ptr]
+
+    def _grow_stack(self):
+        depth = len(self._stack_white) * 2
+        self._stack_white = np.resize(self._stack_white, (depth, self.l1_size))
+        self._stack_black = np.resize(self._stack_black, (depth, self.l1_size))
 
     def reset_stack(self):
         self._stack_ptr = 0
