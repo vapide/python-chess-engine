@@ -110,7 +110,7 @@ class Position:
 
         self.flags = 0
 
-        self.nnue = NNUE(_DEFAULT_NNUE_PATH)
+        self.nnue = None #NNUE(_DEFAULT_NNUE_PATH)
 
         self.history = [PositionState() for _ in range(256)]
 
