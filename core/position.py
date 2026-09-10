@@ -112,12 +112,14 @@ class Position:
 
         self.nnue = None #NNUE(_DEFAULT_NNUE_PATH)
 
+        TEMP_NNUE = NNUE(_DEFAULT_NNUE_PATH)
+
         self.history = [PositionState() for _ in range(256)]
 
-        self.nnue.refresh_from_pos(self)
+        TEMP_NNUE.refresh_from_pos(self)
         start_accumulator = {
-            'white': np.copy(self.nnue.acc_white),
-            'black': np.copy(self.nnue.acc_black)
+            'white': np.copy(TEMP_NNUE.acc_white),
+            'black': np.copy(TEMP_NNUE.acc_black)
         }
         self.history[0].accumulator = start_accumulator
         

@@ -10,7 +10,7 @@ def perft(pos, depth):
     for move in MoveGenerator.generate_legal_moves(pos):
         pos.make_move(move)
         nodes += perft(pos, depth - 1)
-        pos.unmake_move(move)
+        pos.unmake_move()
     return nodes
 
 
@@ -35,12 +35,12 @@ def perft_divide(pos, depth: int): # returns list of tuples for moves
 def run_perft(name: str, fen: str, expected: dict[int, int] | None = None, depths=(1, 2)):
     pos = Position.from_fen(fen)
 
-    print(f"\n{'='*40}")
-    print(f" TESTING: {name}")
-    print(f" FEN:     {pos.to_fen()}")
+    #print(f"\n{'='*40}")
+    #print(f" TESTING: {name}")
+    #print(f" FEN:     {pos.to_fen()}")
 
     for depth in depths:
-        print(f"\n--- Running Perft Depth {depth} ---")
+        #print(f"\n--- Running Perft Depth {depth} ---")
         
         total_nodes = 0
         moves_checked = 0
@@ -71,7 +71,7 @@ def run_perft(name: str, fen: str, expected: dict[int, int] | None = None, depth
                     moves_checked += 1
                     
                     # Print each root move outcome for debugging (Divide)
-                    print(f"{to_uci(move)}: {branch_nodes}") 
+                    #print(f"{to_uci(move)}: {branch_nodes}") 
             finally:
                 pos.unmake_move()
 
